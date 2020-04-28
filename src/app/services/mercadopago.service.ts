@@ -130,7 +130,10 @@ export class MercadopagoService {
       MercadopagoPaymentId, formData
     }).subscribe((res: any) => {
       console.log('payment response: ', res);
-      this.mercadoPagoResponse.status = res.status;
+      if (res.status) {
+        console.log('response has status'); 
+        this.mercadoPagoResponse.status = res.status;
+      }
       this.mercadoPagoStartAgain();
     });
   }
