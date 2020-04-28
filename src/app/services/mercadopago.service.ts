@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {API_URL} from "../constants";
 export const CONSTANTS = {
   API_URL: 'http://192.168.0.13:8000/api/',
   MP_LIBRARY: 'https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js',
@@ -36,6 +37,15 @@ export const MPDataDefault = {email: 'test@oferraro.com', name: 'Oscar', cartAmo
   documentNumber: '12345678', documentType: ''
 };
 
+export interface MPCustomer {
+  email: string;
+  card?: any;
+}
+
+export interface Cart {
+  price: number;
+}
+
 declare var window;
 
 @Injectable({
@@ -45,6 +55,9 @@ export class MercadopagoService {
   public loading = false;
   public MercadopagoCallbackId = '';
   public mercadoPagoResponse: any = {};
+  public cart: Cart = {price: 8000};
+  public intent: any = {};
+  public customer: MPCustomer = {email: "os@oferraro.com", card: 'no_card'}
   public mpCreateTokenErrors: MercadoPagoCardTokenError = {
     hasError: false,
     error: '',
@@ -172,4 +185,10 @@ export class MercadopagoService {
     });
   }
 
+  findCustomer() {
+    return this.httpClient.post(API_URL + 'api/mercadopago/customer/search',{
+      cart: this.cart,
+      customer: this.customer
+    });
+  }
 }
