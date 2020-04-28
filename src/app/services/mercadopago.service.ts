@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {API_URL} from "../constants";
+import {AlertController} from "@ionic/angular";
 export const CONSTANTS = {
   API_URL: 'http://192.168.0.13:8000/api/',
   MP_LIBRARY: 'https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js',
@@ -66,7 +67,8 @@ export class MercadopagoService {
   };
   public mpData: MPData = MPDataDefault;
   constructor(
-      public httpClient: HttpClient
+      public httpClient: HttpClient,
+      public alertController: AlertController,
   ) {
     if (typeof window.mercadopago === 'undefined') {
       this.loadMercadoPago();
@@ -131,8 +133,9 @@ export class MercadopagoService {
     }).subscribe((res: any) => {
       console.log('payment response: ', res);
       if (res.status) {
-        console.log('response has status'); 
+        console.log('response has status');
         this.mercadoPagoResponse.status = res.status;
+        this.presentAlert('msg','Status', res.status);
       }
       this.mercadoPagoStartAgain();
     });
@@ -208,5 +211,16 @@ export class MercadopagoService {
       this.mpData.expirationYear = this.customer.card.expiration_year;
       this.payInBackend(res.id);
     });
+  }
+
+  async presentAlert(header: string, subHeader: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      subHeader: subHeader,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 }

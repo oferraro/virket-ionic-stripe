@@ -2,6 +2,10 @@
   <ion-toolbar>
     <ion-title>
       Mercado Pago (Pagar)
+      <div *ngIf="mercadopagoService.loading" style="display: inline-block">
+          <ion-spinner name="dots"></ion-spinner>
+      </div>
+
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -18,7 +22,7 @@
   <div class="padding">
     <form id="checkout-form" *ngIf="!mercadopagoService.MercadopagoCallbackId">
       <div> Monto:
-        $ <input id="cart-amount" [(ngModel)]="mercadopagoService.mpData.cartAmount" name="cart-amount" />
+        $ <input id="cart-amount" [(ngModel)]="mercadopagoService.mpData.cartAmount" name="cart-amount" class="general-input" />
       </div>
       <div>
         <ion-row>
@@ -28,7 +32,7 @@
             </div>
             <div>
               <input type="email" id="email" [(ngModel)]="mercadopagoService.mpData.email" name="email"
-                     placeholder="your email" />
+                     placeholder="your email" class="general-input" />
             </div>
           </ion-col>
         </ion-row>
@@ -40,7 +44,7 @@
             </div>
             <div>
               <input type="text" id="cardholderName" data-checkout="cardholderName" placeholder="APRO"
-                     [(ngModel)]="mercadopagoService.mpData.name" name="cardholder-name" />
+                     [(ngModel)]="mercadopagoService.mpData.name" name="cardholder-name" class="general-input" />
             </div>
           </ion-col>
         </ion-row>
@@ -56,7 +60,7 @@
                      [(ngModel)]="mercadopagoService.mpData.cardNumber" name="card-number"
                      onselectstart="return false" onpaste="return false"
                      onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
-                     autocomplete=off />
+                     autocomplete=off class="general-input" />
             </div>
           </ion-col>
         </ion-row>
@@ -68,7 +72,7 @@
                    [(ngModel)]="mercadopagoService.mpData.cardSecurityCode" name="card-security-code"
                    onselectstart="return false" onpaste="return false" onCopy="return false"
                    onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off
-                   style="max-width: 100%" />
+                   style="max-width: 100%" class="general-input" />
           </ion-col>
 
           <ion-col size="3">
@@ -76,7 +80,7 @@
             <div>
               <input type="text" id="cardExpirationMonth" data-checkout="cardExpirationMonth" placeholder="11"
                      [(ngModel)]="mercadopagoService.mpData.expirationMonth" name="card-expiration-month"
-                     autocomplete=off style="max-width: 100%" />
+                     autocomplete=off style="max-width: 100%" class="general-input" />
             </div>
           </ion-col>
 
@@ -85,7 +89,7 @@
             <div>
               <input type="text" id="cardExpirationYear" data-checkout="cardExpirationYear" placeholder="2025"
                      [(ngModel)]="mercadopagoService.mpData.expirationYear" name="card-expiration-year"
-                     autocomplete=off style="max-width: 100%" />
+                     autocomplete=off style="max-width: 100%" class="general-input" />
             </div>
           </ion-col>
         </ion-row>
@@ -96,7 +100,7 @@
               <label for="docType">Document type:</label>
             </div>
             <div>
-              <select id="docType" data-checkout="docType" name="documentType"></select>
+              <select id="docType" data-checkout="docType" name="documentType" class="general-select"></select>
             </div>
           </ion-col>
 
@@ -105,7 +109,7 @@
               <label for="docNumber">Document number:</label>
             </div>
             <div>
-              <input type="text" id="docNumber" data-checkout="docNumber" placeholder="12345678"
+              <input type="text" id="docNumber" data-checkout="docNumber" placeholder="12345678" class="general-input"
                      [(ngModel)]="mercadopagoService.mpData.documentNumber" name="document-number" />
             </div>
           </ion-col>
