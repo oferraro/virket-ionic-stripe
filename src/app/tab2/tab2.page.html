@@ -35,7 +35,7 @@
   <div *ngIf="step === 1">
     <div>Intent client_secret: {{mercadopagoService.intent.client_secret}}</div>
     Ya tiene tarjeta:
-    <ion-button class="general-button" (click)="stripeStepTwo()">
+    <ion-button class="general-button" (click)="mercadopagoService.stepThree()">
       crear token
     </ion-button>
     {{mercadopagoService.customer.card | json}}

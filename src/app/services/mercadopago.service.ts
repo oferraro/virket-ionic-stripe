@@ -124,6 +124,7 @@ export class MercadopagoService {
   payInBackend(MercadopagoPaymentId) {
     this.loading = true;
     const formData = {...this.mpData};
+    console.log('formdata', formData);
     formData.cardNumber = '';
     this.httpClient.post(CONSTANTS.API_URL + 'mercadopago/pay', {
       MercadopagoPaymentId, formData
@@ -189,6 +190,20 @@ export class MercadopagoService {
     return this.httpClient.post(API_URL + 'api/mercadopago/customer/search',{
       cart: this.cart,
       customer: this.customer
+    });
+  }
+
+  stepThree() {
+    const form = {
+      // customer.card
+    };
+    window.Mercadopago.createToken(form, (params, res) => {
+      this.mpData.documentType = 'DNI';
+      this.mpData.email = this.customer.email;
+      this.mpData.name = this.customer.card.cardholder.name;
+      this.mpData.expirationMonth = this.customer.card.expiration_month;
+      this.mpData.expirationYear = this.customer.card.expiration_year;
+      this.payInBackend(res.id);
     });
   }
 }
