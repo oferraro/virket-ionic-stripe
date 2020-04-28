@@ -13,5 +13,45 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <div (click)="restartProcess()">
+    <ion-button class="general-button">Empezar desde cero</ion-button>
+  </div>
+
+  <div>
+
+  </div>
+
+  <div>Step: {{step}}</div>
+  <div>
+    <input type="text" [(ngModel)]="cart.price" name="cart-price" />
+  </div>
+
+  <input type="name" [(ngModel)]="customer.email" name="email" />
+
+  <div *ngIf="step === 0">
+    <ion-button (click)="stripeStepOne()" class="general-button">Empezar</ion-button>
+  </div>
+
+  <div *ngIf="step === 1">
+    <div>Intent client_secret: {{intent.client_secret}}</div>
+    Ya tiene tarjeta:
+    <ion-button class="general-button" (click)="stripeStepTwo()">
+      crear token
+    </ion-button>
+    {{customer.card | json}}
+  </div>
+
+  <div *ngIf="step === 2">
+    <ion-button class="general-button" (click)="stripeStepOne()">
+      No existe tarjeta, crear una
+    </ion-button>
+  </div>
+
+  <div *ngIf="step === 3">
+    <ion-button class="general-button" (click)="stripeStepOne()">
+
+    </ion-button>
+  </div>
+
+
 </ion-content>

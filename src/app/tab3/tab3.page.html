@@ -1,17 +1,139 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      Mercado Pago (Pagar)
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div *ngIf="mercadopagoService.loading">
+    Cargando
+    <div>
+      <ion-spinner name="dots"></ion-spinner>
+    </div>
+  </div>
+
+  <div class="padding">
+    <form id="checkout-form" *ngIf="!mercadopagoService.MercadopagoCallbackId">
+      <div> Monto:
+        $ <input id="cart-amount" [(ngModel)]="mercadopagoService.mpData.cartAmount" name="cart-amount" />
+      </div>
+      <div>
+        <ion-row>
+          <ion-col size="8">
+            <div>
+              <label for="email">Email</label>
+            </div>
+            <div>
+              <input type="email" id="email" [(ngModel)]="mercadopagoService.mpData.email" name="email"
+                     placeholder="your email" />
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="8">
+            <div>
+              <label for="cardholderName">Card holder name</label>
+            </div>
+            <div>
+              <input type="text" id="cardholderName" data-checkout="cardholderName" placeholder="APRO"
+                     [(ngModel)]="mercadopagoService.mpData.name" name="cardholder-name" />
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="8">
+            <div>
+              <label for="cardNumber">Credit card number:</label>
+              <ion-button class="general-button" *ngIf="false" (click)="mercadopagoService.cardInfo()">card info</ion-button>
+            </div>
+            <div>
+              <input type="text" id="cardNumber" data-checkout="cardNumber" placeholder="4509 9535 6623 3704"
+                     [(ngModel)]="mercadopagoService.mpData.cardNumber" name="card-number"
+                     onselectstart="return false" onpaste="return false"
+                     onCopy="return false" onCut="return false" onDrag="return false" onDrop="return false"
+                     autocomplete=off />
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="5">
+            <label for="securityCode">Security code:</label>
+            <input type="text" id="securityCode" data-checkout="securityCode" placeholder="123"
+                   [(ngModel)]="mercadopagoService.mpData.cardSecurityCode" name="card-security-code"
+                   onselectstart="return false" onpaste="return false" onCopy="return false"
+                   onCut="return false" onDrag="return false" onDrop="return false" autocomplete=off
+                   style="max-width: 100%" />
+          </ion-col>
+
+          <ion-col size="3">
+            <div>Month</div>
+            <div>
+              <input type="text" id="cardExpirationMonth" data-checkout="cardExpirationMonth" placeholder="11"
+                     [(ngModel)]="mercadopagoService.mpData.expirationMonth" name="card-expiration-month"
+                     autocomplete=off style="max-width: 100%" />
+            </div>
+          </ion-col>
+
+          <ion-col size="3">
+            <div>Year</div>
+            <div>
+              <input type="text" id="cardExpirationYear" data-checkout="cardExpirationYear" placeholder="2025"
+                     [(ngModel)]="mercadopagoService.mpData.expirationYear" name="card-expiration-year"
+                     autocomplete=off style="max-width: 100%" />
+            </div>
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="5">
+            <div>
+              <label for="docType">Document type:</label>
+            </div>
+            <div>
+              <select id="docType" data-checkout="docType" name="documentType"></select>
+            </div>
+          </ion-col>
+
+          <ion-col size="6">
+            <div>
+              <label for="docNumber">Document number:</label>
+            </div>
+            <div>
+              <input type="text" id="docNumber" data-checkout="docNumber" placeholder="12345678"
+                     [(ngModel)]="mercadopagoService.mpData.documentNumber" name="document-number" />
+            </div>
+          </ion-col>
+
+        </ion-row>
+
+        <ion-button class="general-button" (click)="mercadopagoService.doCheckout()" disabled="{{mercadopagoService.loading}}">Pagar</ion-button>
+      </div>
+    </form>
+
+    <div *ngIf="mercadopagoService.MercadopagoCallbackId">
+      ID de pago: {{mercadopagoService.MercadopagoCallbackId}}
+      <ion-button (click)="mercadopagoService.payInBackend(mercadopagoService.MercadopagoCallbackId)" disabled="{{mercadopagoService.loading}}" class="general-button">
+        Pagar en backend
+      </ion-button>
+      <ion-button (click)="mercadopagoService.mercadoPagoStartAgain()" class="general-button">Comenzar de nuevo </ion-button>
+    </div>
+
+    <div *ngIf="mercadopagoService.hasStatus()">
+      Estado de la compra: {{mercadopagoService.mercadoPagoResponse.status}}
+    </div>
+    <div *ngIf="mercadopagoService.mpCreateTokenErrors.hasError">
+      <div>Error: {{mercadopagoService.mpCreateTokenErrors.error}}</div>
+      <div>Mensaje: {{mercadopagoService.mpCreateTokenErrors.message}}</div>
+      <div *ngFor="let cause of mercadopagoService.mpCreateTokenErrors.causes">
+        <strong>Causa: </strong>({{cause.code}}) {{cause.description}}
+      </div>
+    </div>
+  </div>
+
 </ion-content>

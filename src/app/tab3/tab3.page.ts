@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {MercadopagoService} from "../services/mercadopago.service";
 
 @Component({
   selector: 'app-tab3',
@@ -6,7 +7,8 @@ import { Component } from '@angular/core';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
-
-  constructor() {}
+  constructor(
+    public mercadopagoService: MercadopagoService,
+  ) {}
 
 }

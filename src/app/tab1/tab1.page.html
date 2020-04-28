@@ -1,23 +1,45 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 1
+      Ver pagos hechos
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
+<ion-content [fullscreen]="true" class="ion-content">
 
-      <ion-button
-        (click)="stripePay()"
-      >
-        Create card...ss
-      </ion-button>
-    </ion-toolbar>
-  </ion-header>
+  <div>
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <div *ngIf="responsePaging">
+      <div>Total: {{responsePaging.total}}</div>
+      <div>Offset: {{responsePaging.offset}}</div>
+      <div>Limit: {{responsePaging.limit}}</div>
+    </div>
+
+    <div *ngIf="loading">
+      Cargando lista de pagos:
+      <div>
+        <ion-spinner name="dots"></ion-spinner>
+      </div>
+    </div>
+
+    <ion-button (click)="getPayments()" disabled="{{loading}}">
+      Recargar lista de pagos
+    </ion-button>
+  </div>
+  <div *ngIf="this.payments">
+    <div *ngFor="let payment of payments">
+      todos los ultimos {{responsePaging.limit}} pagos realizados
+      <hr />
+      <div>{{payment.statement_descriptor}}</div>
+      <div>{{payment.status}}</div>
+      <div>{{payment.status_detail}}</div>
+      <div>$ {{payment.transaction_amount}}</div>
+      <div>Metadata:
+        {{payment.metadata | json}}
+      </div>
+      <hr />
+    </div>
+  </div>
+
 </ion-content>
