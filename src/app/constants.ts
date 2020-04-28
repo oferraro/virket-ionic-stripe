@@ -9,3 +9,9 @@ export const usersList = [
 ];
 
 export const STRIPE_PUBLIC_KEY = 'pk_test_ytza3isIkOiAcCXUKHokrpbY00IQ15FCMp';
+
+export const PAYPAL = {
+    account: "sb-9bikr1602901@business.example.com",
+    token: "access_token$sandbox$j3gymhwktptkw9jf$a1781adf57defc3970a4474fd3073895",
+}
+

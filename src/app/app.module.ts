@@ -10,12 +10,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Stripe } from '@ionic-native/stripe/ngx';
 import {HttpClientModule} from "@angular/common/http";
+import {PayPal} from '@ionic-native/paypal/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,],
   providers: [
+    PayPal,
     Stripe,
     StatusBar,
     SplashScreen,

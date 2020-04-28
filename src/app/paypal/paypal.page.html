@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>paypal</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-button (click)="oxxoPay()">Oxxo Pay</ion-button>
+
+  <div *ngIf="mercadopagoService.hasOxxoLink()">
+    <a href="{{mercadopagoService.oxxoResponse.response_url}}">Link de pago</a>
+    <div>barcode: {{mercadopagoService.oxxoResponse.barcode}}</div>
+    <div>Estado del pago: {{mercadopagoService.oxxoResponse.status}}</div>
+  </div>
+
+</ion-content>

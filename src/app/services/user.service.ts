@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {API_URL, usersList} from "../constants";
+import {usersList} from "../constants";
 
 export interface User {
   id: number;

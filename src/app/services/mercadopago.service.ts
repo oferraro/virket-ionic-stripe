@@ -5,7 +5,7 @@ import {AlertController} from "@ionic/angular";
 export const CONSTANTS = {
   API_URL: 'http://192.168.0.13:8000/api/',
   MP_LIBRARY: 'https://secure.mlstatic.com/sdk/javascript/v1/mercadopago.js',
-  MP_TOKEN: 'TEST-98bc38c3-36d4-4f26-b0e4-8c3fe23a83f8',
+  MP_TOKEN: 'TEST-17c09bd0-96fa-4b62-8c89-3256a6877f05',
   MP_FORM: 'https://www.mercadopago.com.ar/integrations/v1/web-tokenize-checkout.js'
 };
 
@@ -47,6 +47,13 @@ export interface Cart {
   price: number;
 }
 
+interface OxxoPaymentResponse {
+  empty: boolean;
+  response_url: '';
+  barcode: '';
+  status: '';
+}
+
 declare var window;
 
 @Injectable({
@@ -59,6 +66,7 @@ export class MercadopagoService {
   public cart: Cart = {price: 8000};
   public intent: any = {};
   public customer: MPCustomer = {email: "os@oferraro.com", card: 'no_card'}
+  public oxxoResponse: OxxoPaymentResponse = {empty: true, response_url: '', barcode: '', status: ''};
   public mpCreateTokenErrors: MercadoPagoCardTokenError = {
     hasError: false,
     error: '',
@@ -123,6 +131,27 @@ export class MercadopagoService {
     });
   }
 
+  hasOxxoLink () {
+    return (!this.oxxoResponse.empty);
+  }
+
+  oxxoPay() {
+    this.oxxoResponse.empty = true;
+    this.oxxoResponse.status = '';
+    this.httpClient.post(CONSTANTS.API_URL + 'mercadopago/oxxo/pay', {})
+        .subscribe((res: any) => {
+          if (res.payment) {
+            this.oxxoResponse = {
+              empty: false,
+              response_url: res.payment.transaction_details.external_resource_url,
+              barcode: res.payment.barcode.content,
+              status: res.payment.status
+            };
+          }
+          console.log('oxxo pay res: ', res);
+        });
+  }
+
   payInBackend(MercadopagoPaymentId) {
     this.loading = true;
     const formData = {...this.mpData};
@@ -136,6 +165,13 @@ export class MercadopagoService {
         console.log('response has status');
         this.mercadoPagoResponse.status = res.status;
         this.presentAlert('msg','Status', res.status);
+      }
+      if (res.error) {
+        let errorCauses = '';
+        res.error.causes.forEach((cause) => {
+          errorCauses+= `<br />${cause.code}: ${cause.description}`;
+        });
+        this.presentAlert('Error', res.error.message, errorCauses);
       }
       this.mercadoPagoStartAgain();
     });
@@ -158,7 +194,7 @@ export class MercadopagoService {
     const documentTypes = document.getElementById('docType') as HTMLSelectElement;
     if (documentTypes && documentTypes.options.length === 0) {
       this.checkDocumentTypes();
-      window.Mercadopago.getIdentificationTypes();
+      // window.Mercadopago.getIdentificationTypes();
     } else {
       setTimeout(() => {
         this.setMercadopagoConfiguration();
@@ -168,13 +204,14 @@ export class MercadopagoService {
 
   checkDocumentTypes() {
     const documentTypes = document.getElementById('docType') as HTMLSelectElement;
-    if (documentTypes.options.length === 0) { // Did load but document types selector are still empty
+    this.loading = false; // No identification types for Mexico
+    /*if (documentTypes.options.length === 0) { // Did load but document types selector are still empty
       setTimeout(() => {
         this.checkDocumentTypes();
       }, 1000); // try in 1 second
     } else {
       this.loading = false;
-    }
+    }*/
   }
 
   cardInfo() { // TODO: remove this, not in use
